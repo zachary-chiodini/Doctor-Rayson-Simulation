@@ -30,12 +30,9 @@ class Wave(Particle):
 
 class Potential:
 
-    def __init__(self, r0=np.zeros((1, 3))):
+    def __init__(self, r0=np.zeros(3)):
         self.r0 = r0
 
     def exponential(self, X: Matrix) -> Matrix:
         return np.exp(X - self.r0)
-
-    def square(self, X: Matrix) -> Matrix:
-        pass
 
