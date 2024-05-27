@@ -4,7 +4,6 @@ from nptyping import Float, NDArray, Shape
 
 Matrix = NDArray[Shape['*, 3'], Float]
 Vector = NDArray[Shape['3'], Float]
-Vertex = NDArray[Shape['*'], Float]
 
 
 class Particle:
@@ -17,8 +16,8 @@ class Particle:
         self.s0 = s0
 
     @staticmethod
-    def delta(X: Matrix, r: Vector = np.zeros(3), a=0.1) -> Matrix:
-        X[:, 2] = np.exp(-(np.sqrt(np.sum((X - r)**2, axis=1))/a)**2) / a
+    def delta(X: Matrix, r: Vector = np.zeros(3), a=1) -> Matrix:
+        X[:, 2] = np.exp(-a * np.linalg.norm(X - r, axis=1)**2)
         return X
 
 
@@ -34,5 +33,5 @@ class Potential:
         self.r0 = r0
 
     def exponential(self, X: Matrix) -> Matrix:
-        return np.exp(X - self.r0)
-
+        X[:, 2] = np.exp(np.linalg.norm(X - self.r0))
+        return X
