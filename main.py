@@ -1,4 +1,4 @@
-from OpenGL import Window
+from graphics import Window
 
 if __name__ == '__main__':
     window = Window()
