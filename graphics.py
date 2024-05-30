@@ -3,7 +3,6 @@ from typing import List
 import glfw
 from numpy import uintc
 from OpenGL import GL
-from OpenGL.constant import IntConstant
 
 from nptypes import Matrix, Vector, Vertex
 
@@ -26,10 +25,11 @@ class VertexArray:
             GL.glEnableVertexAttribArray(i)
         return None
 
-    def create_buffer(self, vertex_stream: Vertex, components: int, usage: IntConstant) -> None:
+    def create_buffer(self, vertex_stream: Vertex, components: int, usage: str) -> None:
+        map_ = {'dynamic': GL.GL_DYNAMIC_DRAW}
         vbo = GL.glGenBuffers(1)
         GL.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo)
-        GL.glBufferData(GL.GL_ARRAY_BUFFER, vertex_stream.size * vertex_stream.itemsize, vertex_stream, usage)
+        GL.glBufferData(GL.GL_ARRAY_BUFFER, vertex_stream.size * vertex_stream.itemsize, vertex_stream, map_[usage])
         self.vbo_list.append(vbo)
         self.vba_comps.append(components)
         return None
