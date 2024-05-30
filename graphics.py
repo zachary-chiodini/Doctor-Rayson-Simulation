@@ -1,25 +1,24 @@
-from typing import List, Optional
+from typing import List
 
 import glfw
-from nptyping import Float, NDArray, Shape
+from numpy import uintc
 from OpenGL import GL
 from OpenGL.constant import IntConstant
 
-
-Vector = NDArray[Shape['*'], Float]
+from nptypes import Matrix, Vector, Vertex
 
 
 class VertexArray:
 
     def __init__(self) -> None:
-        self._vba = GL.c_int()
+        self._vba = uintc()
         self.vba_comps: List[int] = []
-        self.vbo_list: List[GL.ctypes.c_long] = []
+        self.vbo_list: List[uintc] = []
 
     def create_array(self) -> None:
         if not self.vbo_list:
             raise AttributeError('A Vertex Buffer Object must be created.')
-        GL.glGenVertexArrays(1, self._vba)
+        self._vba = GL.glGenVertexArrays(1)
         GL.glBindVertexArray(self._vba)
         for i, (vbo, comps) in enumerate(zip(self.vbo_list, self.vba_comps)):
             GL.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo)
@@ -27,9 +26,8 @@ class VertexArray:
             GL.glEnableVertexAttribArray(i)
         return None
 
-    def create_buffer(self, vertex_stream: Vector, components: int, usage: IntConstant) -> None:
-        vbo = GL.c_int()
-        GL.glGenBuffers(1, vbo)
+    def create_buffer(self, vertex_stream: Vertex, components: int, usage: IntConstant) -> None:
+        vbo = GL.glGenBuffers(1)
         GL.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo)
         GL.glBufferData(GL.GL_ARRAY_BUFFER, vertex_stream.size * vertex_stream.itemsize, vertex_stream, usage)
         self.vbo_list.append(vbo)
@@ -53,22 +51,25 @@ class Monitor:
 
 class Program:
 
-    def __init__(self):
-        fragment_shader_src = '''
-            // OpenGL Shader Language:
-            void main() {
-                // Elements are R, G, B and alpha.
-                gl_FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-            }
-            '''
-        vertex_shader_src = '''
-            // OpenGL Shader Language:
-            in vec3 xyzPosition;
-            void main() {
-                // 4D vector uses homogeneous coordinates.
-                gl_Position = vec4(xyzPosition, 1);
-            }
-            '''
+    default_fragment_shader_src = '''
+        // OpenGL Shader Language:
+        void main() {
+            // Elements are R, G, B and alpha.
+            gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+        }
+        '''
+    default_vertex_shader_src = '''
+        // OpenGL Shader Language:
+        in vec3 xyzPosition;
+        void main() {
+            // 4D vector uses homogeneous coordinates.
+            gl_Position = vec4(xyzPosition, 1.0);
+        }
+        '''
+
+    def __init__(
+            self, fragment_shader_src: str = default_fragment_shader_src,
+            vertex_shader_src: str = default_vertex_shader_src):
         self._vertex_shader = GL.glCreateShader(GL.GL_VERTEX_SHADER)
         self._fragment_shader = GL.glCreateShader(GL.GL_FRAGMENT_SHADER)
         GL.glShaderSource(self._vertex_shader, vertex_shader_src)
@@ -85,6 +86,8 @@ class Program:
     def exit(self) -> None:
         GL.glDeleteShader(self._program, self._vertex_shader)
         GL.glDeleteShader(self._program, self._fragment_shader)
+        GL.glDeleteProgram(self._program)
+        return None
 
 
 class Window:

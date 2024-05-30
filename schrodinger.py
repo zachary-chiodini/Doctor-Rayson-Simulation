@@ -1,9 +1,6 @@
 import numpy as np
-from nptyping import Float, NDArray, Shape
 
-
-Matrix = NDArray[Shape['*, 3'], Float]
-Vector = NDArray[Shape['3'], Float]
+from nptypes import Matrix, Vector, Vertex
 
 
 class Particle:
