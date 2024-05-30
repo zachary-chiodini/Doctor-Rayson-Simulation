@@ -34,8 +34,10 @@ class VertexArray:
         self.vba_comps.append(components)
         return None
 
-    def delete(self) -> None:
-        pass
+    @staticmethod
+    def draw_triangles(vector_count: int) -> None:
+        GL.glDrawArrays(GL.GL_TRIANGLES, 0, vector_count)
+        return None
 
 
 class Monitor:
@@ -87,6 +89,10 @@ class Program:
         GL.glDeleteShader(self._program, self._vertex_shader)
         GL.glDeleteShader(self._program, self._fragment_shader)
         GL.glDeleteProgram(self._program)
+        return None
+
+    def use_program(self) -> None:
+        GL.glUseProgram(self._program)
         return None
 
 

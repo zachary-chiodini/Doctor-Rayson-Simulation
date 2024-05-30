@@ -13,4 +13,6 @@ if __name__ == '__main__':
     vertex_array.create_array()
     program = Program()
     while window.is_open():
+        program.use_program()
+        vertex_array.draw_triangles(stream.size // 3)
         window.refresh()
