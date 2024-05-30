@@ -8,8 +8,8 @@ from nptypes import Vertex
 if __name__ == '__main__':
     window = Window()
     vertex_array = VertexArray()
-    plane: Vertex = Space().plane
-    vertex_array.create_buffer(plane, 3, GL_DYNAMIC_DRAW)
+    stream: Vertex = Space().plane
+    vertex_array.create_buffer(stream, 3, GL_DYNAMIC_DRAW)
     vertex_array.create_array()
     program = Program()
     while window.is_open():
