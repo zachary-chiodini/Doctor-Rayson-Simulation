@@ -1,9 +1,8 @@
-import vulkan
-
-from window import Window
+import vulkan as v
 
 
 class Vulkan:
     
     def __init__(self):
-        pass
+        info = v.VkInstanceCreateInfo()
+        self._instance = v.vkCreateInstance(info)
