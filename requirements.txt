@@ -1,0 +1,6 @@
+glfw
+nptyping
+numpy
+PyOpenGL
+PyOpenGL-accelerate
+typing_extensions
